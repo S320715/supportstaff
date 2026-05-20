@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Staff Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3"><i class="bi bi-people"></i> Staff Management</h1>
+    <a href="{% url 'register' %}" class="btn btn-primary">
+        <i class="bi bi-person-plus"></i> Add Staff
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" aria-label="Staff list">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in staff %}
+                    <tr>
+                        <td>{{ member.full_name|default:member.username }}</td>
+                        <td>{{ member.username }}</td>
+                        <td>{{ member.email }}</td>
+                        <td>{{ member.department }}</td>
+                        <td>
+                            <span class="badge bg-{% if member.role == 'admin' %}danger{% else %}secondary{% endif %}">
+                                {{ member.role }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if member.id != user.id %}
+                            <form method="POST" action="{% url 'staff_delete' member.id %}"
+                                  onsubmit="return confirm('Remove {{ member.full_name }}?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                            </form>
+                            {% else %}
+                            <span class="text-muted small">You</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

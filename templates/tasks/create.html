@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Create Task{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Create New Task</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{% url 'task_create' %}">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label fw-semibold">Title</label>
+                        <input type="text" name="title" id="title"
+                               class="form-control" placeholder="e.g. Morning medication round" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-semibold">Description</label>
+                        <textarea name="description" id="description"
+                                  class="form-control" rows="3" required></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="due_date" class="form-label fw-semibold">Due Date</label>
+                            <input type="datetime-local" name="due_date" id="due_date"
+                                   class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="priority" class="form-label fw-semibold">Priority</label>
+                            <select name="priority" id="priority" class="form-select">
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="status" class="form-label fw-semibold">Status</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="Pending" selected>Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="project_id" class="form-label fw-semibold">Project</label>
+                            <select name="project_id" id="project_id" class="form-select" required>
+                                {% for project in projects %}
+                                <option value="{{ project.id }}">{{ project.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="assigned_to" class="form-label fw-semibold">Assign To</label>
+                        <select name="assigned_to" id="assigned_to" class="form-select" required>
+                            {% for u in users %}
+                            <option value="{{ u.id }}">{{ u.full_name|default:u.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Save Task</button>
+                        <a href="{% url 'task_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to MediTask{% endblock %}
+
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+    <i class="bi bi-hospital display-1 text-primary"></i>
+    <h1 class="display-5 fw-bold mt-3">MediTask</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">
+            Hospital Staff Task &amp; Duty Management System.<br>
+            Helping ward managers assign, track and complete daily medical tasks efficiently.
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4">
+                <i class="bi bi-box-arrow-in-right"></i> Staff Login
+            </a>
+            <a href="{% url 'register' %}" class="btn btn-outline-secondary btn-lg px-4">
+                <i class="bi bi-person-plus"></i> Register
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4 py-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-list-check display-4 text-primary"></i>
+                    <h5 class="card-title mt-3">Task Management</h5>
+                    <p class="card-text text-muted">Assign and track daily duties for nurses, porters, and support staff across all wards.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-speedometer2 display-4 text-success"></i>
+                    <h5 class="card-title mt-3">Real-Time Dashboard</h5>
+                    <p class="card-text text-muted">Ward managers see live progress on all tasks. Instantly know what's pending, in progress, or completed.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-shield-check display-4 text-warning"></i>
+                    <h5 class="card-title mt-3">Secure Role Access</h5>
+                    <p class="card-text text-muted">Admins manage everything. Staff see their own tasks. All data is protected and access-controlled.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

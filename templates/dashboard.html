@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3"><i class="bi bi-speedometer2"></i> Dashboard</h1>
+    <span class="badge bg-{{ user.role|yesno:'danger,primary' }} fs-6">
+        {% if user.is_admin %}Ward Manager{% else %}Staff Member{% endif %}
+    </span>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card text-center border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="display-6 fw-bold text-primary">{{ total_tasks }}</div>
+                <div class="text-muted small">Total Tasks</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="display-6 fw-bold text-warning">{{ pending_tasks }}</div>
+                <div class="text-muted small">Pending</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="display-6 fw-bold text-info">{{ inprogress_tasks }}</div>
+                <div class="text-muted small">In Progress</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-center border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="display-6 fw-bold text-success">{{ completed_tasks }}</div>
+                <div class="text-muted small">Completed</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Tasks</h5>
+        <a href="{% url 'task_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="card-body p-0" id="task-list-container">
+        {% if my_tasks %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" aria-label="Recent tasks">
+                <thead class="table-light">
+                    <tr>
+                        <th>Task</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Due</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in my_tasks %}
+                    <tr>
+                        <td>{{ task.title }}</td>
+                        <td>
+                            <span class="badge bg-{% if task.priority == 'Critical' %}danger{% elif task.priority == 'High' %}warning{% elif task.priority == 'Medium' %}info{% else %}secondary{% endif %}">
+                                {{ task.priority }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{% if task.status == 'Completed' %}success{% elif task.status == 'In Progress' %}primary{% else %}secondary{% endif %}">
+                                {{ task.status }}
+                            </span>
+                        </td>
+                        <td class="{% if task.is_overdue %}text-danger{% endif %}">
+                            {{ task.due_date|date:"d M H:i" }}
+                        </td>
+                        <td>
+                            <a href="{% url 'task_view' task.id %}" class="btn btn-sm btn-outline-secondary">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-4 text-center text-muted">
+            <i class="bi bi-check-circle display-4"></i>
+            <p class="mt-2">No tasks assigned yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const refreshUrl = "{% url 'refresh_tasks' %}";
+</script>
+{% endblock %}

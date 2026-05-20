@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}All Tasks{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3"><i class="bi bi-list-check"></i> All Tasks</h1>
+    <a href="{% url 'task_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> New Task
+    </a>
+</div>
+
+{% if tasks %}
+<div class="table-responsive">
+    <table class="table table-hover shadow-sm" aria-label="Task list">
+        <thead class="table-primary">
+            <tr>
+                <th>Title</th>
+                <th>Project</th>
+                <th>Assigned To</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Due Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.project.name }}</td>
+                <td>{{ task.assigned_to.full_name|default:task.assigned_to.username }}</td>
+                <td>
+                    <span class="badge bg-{% if task.priority == 'Critical' %}danger{% elif task.priority == 'High' %}warning{% elif task.priority == 'Medium' %}info{% else %}secondary{% endif %}">
+                        {{ task.priority }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-{% if task.status == 'Completed' %}success{% elif task.status == 'In Progress' %}primary{% else %}secondary{% endif %}">
+                        {{ task.status }}
+                    </span>
+                </td>
+                <td class="{% if task.is_overdue %}text-danger fw-bold{% endif %}">
+                    {{ task.due_date|date:"d M Y H:i" }}
+                </td>
+                <td>
+                    <a href="{% url 'task_view' task.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+    <i class="bi bi-inbox display-1"></i>
+    <p class="mt-3">No tasks found. <a href="{% url 'task_create' %}">Create one now</a>.</p>
+</div>
+{% endif %}
+{% endblock %}

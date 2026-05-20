@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Edit Task{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+                <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Edit Task</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{% url 'task_edit' task.id %}">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label fw-semibold">Title</label>
+                        <input type="text" name="title" id="title"
+                               class="form-control" value="{{ task.title }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-semibold">Description</label>
+                        <textarea name="description" id="description"
+                                  class="form-control" rows="3" required>{{ task.description }}</textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="due_date" class="form-label fw-semibold">Due Date</label>
+                            <input type="datetime-local" name="due_date" id="due_date"
+                                   class="form-control"
+                                   value="{{ task.due_date|date:'Y-m-d' }}T{{ task.due_date|date:'H:i' }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="priority" class="form-label fw-semibold">Priority</label>
+                            <select name="priority" id="priority" class="form-select">
+                                <option value="Low" {% if task.priority == 'Low' %}selected{% endif %}>Low</option>
+                                <option value="Medium" {% if task.priority == 'Medium' %}selected{% endif %}>Medium</option>
+                                <option value="High" {% if task.priority == 'High' %}selected{% endif %}>High</option>
+                                <option value="Critical" {% if task.priority == 'Critical' %}selected{% endif %}>Critical</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="status" class="form-label fw-semibold">Status</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="Pending" {% if task.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                <option value="Completed" {% if task.status == 'Completed' %}selected{% endif %}>Completed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="project_id" class="form-label fw-semibold">Project</label>
+                            <select name="project_id" id="project_id" class="form-select">
+                                {% for project in projects %}
+                                <option value="{{ project.id }}" {% if task.project.id == project.id %}selected{% endif %}>{{ project.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="assigned_to" class="form-label fw-semibold">Assign To</label>
+                        <select name="assigned_to" id="assigned_to" class="form-select">
+                            {% for u in users %}
+                            <option value="{{ u.id }}" {% if task.assigned_to.id == u.id %}selected{% endif %}>{{ u.full_name|default:u.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Save Task</button>
+                        <a href="{% url 'task_view' task.id %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
